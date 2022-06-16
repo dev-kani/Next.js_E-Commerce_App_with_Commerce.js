@@ -8,7 +8,7 @@ export default function Home(props) {
 
    const { products } = props
 
-   console.log(products)
+   // console.log(products)
 
    return (
       <Layout title='Home' commercePublicKey={props.commercePublicKey}>

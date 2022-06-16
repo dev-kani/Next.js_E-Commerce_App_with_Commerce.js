@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import {
-  Box, Button, Card, CircularProgress, FormControl, Grid, InputLabel, List, ListItem, MenuItem, Select, Slide, Step, StepLabel, Stepper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography
+  Box, Button, Card, CircularProgress, FormControl, Grid, InputLabel, List, ListItem, MenuItem, Select, Step, StepLabel, Stepper, TextField, Typography
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab'
 import Layout from '../components/Layout'
@@ -10,7 +9,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Store } from '../components/Store';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
-import { CART_RETRIEVE_SUCCESS } from '../utils/constants';
+import { CART_RETRIEVE_SUCCESS, ORDER_SET } from '../utils/constants';
 
 const dev = process.env.NODE_ENV === 'development'
 
@@ -85,8 +84,65 @@ function Checkout(props) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
     if (activeStep === steps.length - 1) {
-      // handleCaptureCheckout();
+      handleCaptureCheckout();
     }
+  };
+
+  const handleCaptureCheckout = async () => {
+    const orderData = {
+      line_items: checkoutToken.live.line_items,
+      customer: {
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+      },
+      shipping: {
+        name: shippingName,
+        street: shippingStreet,
+        town_city: shippingCity,
+        county_state: shippingStateProvince,
+        postal_zip_code: shippingPostalZipCode,
+        country: shippingCountry,
+      },
+      fulfillment: {
+        shipping_method: shippingOption,
+      },
+      payment: {
+        gateway: 'test_gateway',
+        card: {
+          number: cardNum,
+          expiry_month: expMonth,
+          expiry_year: expYear,
+          cvc: cvv,
+          postal_zip_code: billingPostalZipcode,
+        },
+      },
+    };
+
+    const commerce = getCommerce(props.commercePublicKey);
+    try {
+      const order = await commerce.checkout.capture(
+        checkoutToken.id,
+        orderData
+      );
+      dispatch({ type: ORDER_SET, payload: order });
+      localStorage.setItem('order_receipt', JSON.stringify(order));
+      await refreshCart();
+      Router.push('/confirmation');
+    } catch (err) {
+      const errList = [err.data.error.message];
+      const errs = err.data.error.errors;
+      for (const index in errs) {
+        errList.push(`${index}: ${errs[index]}`);
+      }
+      setErrors(errList);
+    }
+  };
+
+  const refreshCart = async () => {
+    const commerce = getCommerce(props.commercePublicKey);
+    const newCart = await commerce.cart.refresh();
+    dispatch({ type: CART_RETRIEVE_SUCCESS, payload: newCart });
   };
 
   const [errors, setErrors] = useState([]);

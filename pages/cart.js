@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, CircularProgress, Grid, List, ListItem, MenuItem, Select, Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
+import { Button, Card, CircularProgress, Grid, List, ListItem, MenuItem, Select, Slide, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab'
 import Layout from '../components/Layout'
 import getCommerce from '../utils/commerce'
@@ -36,7 +36,7 @@ function Cart(props) {
     Router.push('/checkout');
   }
 
-  console.log(cart)
+  // console.log(cart)
 
   return (
     <Layout title='Home' commercePublicKey={props.commercePublicKey}>

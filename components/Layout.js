@@ -7,11 +7,10 @@ import { Store } from './Store'
 import { CART_RETRIEVE_REQUEST, CART_RETRIEVE_SUCCESS } from '../utils/constants'
 import getCommerce from '../utils/commerce'
 
-
 export default function Layout({
    children,
    commercePublicKey,
-   title = 'Coolshop'
+   title = 'Random&Shop'
 }) {
    const classes = useStyles()
    const { state, dispatch } = useContext(Store)
@@ -31,7 +30,7 @@ export default function Layout({
       <React.Fragment>
          <Head>
             <meta charSet='utf-8' />
-            <title>{`${title} - Coolshop`}</title>
+            <title>{`${title} - Random&Shop`}</title>
             <link rel='icon' href='/favicon.ico' />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
          </Head>
@@ -52,7 +51,7 @@ export default function Layout({
                         href='/'
                         className={classes.toolbarTitle}
                      >
-                        Coolshop
+                        Random&Shop
                      </Link>
                   </NextLink>
                   <nav>
@@ -82,7 +81,7 @@ export default function Layout({
             <Container maxWidth='md' component='footer'>
                <Box mt={5}>
                   <Typography variant='body2' color='textSecondary' align='center'>
-                     {'Ⓒ'} Coolshop 2022 {'.'}
+                     {'Ⓒ'} Random&Shop 2022 {'.'}
                   </Typography>
                </Box>
             </Container>
